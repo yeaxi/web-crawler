@@ -1,4 +1,4 @@
-package ua.dudka.webcrawler.executor.domain.model;
+package ua.dudka.webcrawler.client.domain.model;
 
 public enum ExecutionStatus {
     IDLE, RUNNING, COMPLETED, ERROR

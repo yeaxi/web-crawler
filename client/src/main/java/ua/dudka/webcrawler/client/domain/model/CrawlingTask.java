@@ -1,11 +1,11 @@
-package ua.dudka.webcrawler.executor.domain.model;
+package ua.dudka.webcrawler.client.domain.model;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import ua.dudka.webcrawler.executor.domain.model.vo.Identifier;
-import ua.dudka.webcrawler.executor.domain.model.vo.StartPage;
+import ua.dudka.webcrawler.client.domain.model.vo.Identifier;
+import ua.dudka.webcrawler.client.domain.model.vo.StartPage;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

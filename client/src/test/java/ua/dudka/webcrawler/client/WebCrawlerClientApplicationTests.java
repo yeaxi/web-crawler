@@ -1,4 +1,4 @@
-package ua.dudka.webcrawler.executor;
+package ua.dudka.webcrawler.client;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

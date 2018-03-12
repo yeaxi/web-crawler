@@ -1,4 +1,4 @@
-package ua.dudka.webcrawler.executor.domain.model.vo;
+package ua.dudka.webcrawler.client.domain.model.vo;
 
 import lombok.Value;
 
