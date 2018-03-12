@@ -1,4 +1,4 @@
-package ua.dudka.webcrawler.client.web.request;
+package ua.dudka.webcrawler.client.web.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CreateCrawlingTaskRequest {
     private String url;
-    private String alias;
     private LocalDateTime startTime;
     private Duration duration;
 }
