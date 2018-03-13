@@ -9,4 +9,6 @@ public interface CrawlingTaskService {
     Mono<CrawlingTask> addTask(CreateCrawlingTaskRequest request);
 
     Flux<CrawlingTask> findAll();
+
+    Mono<Void> removeTask(String taskId);
 }
