@@ -23,12 +23,12 @@ public class CrawlingTaskControllerTest {
 
     private CrawlingTaskService crawlingTaskService = mock(CrawlingTaskService.class);
 
-    private WebTestClient webClient = WebTestClient.bindToController(new CrawlingTaskController(crawlingTaskService))
+    private WebTestClient webClient = WebTestClient.bindToController(new CrawlingTaskController(crawlingTaskService), new CrawlingTaskController.WebTaskExceptionHandler())
             .configureClient()
             .build();
 
     @Test
-    public void getAllTasks() {
+    public void getAllTasksShouldReturnTasksFromService() {
         CrawlingTask task = new CrawlingTask("https://google.com", LocalDateTime.now(), Duration.of(1, ChronoUnit.MINUTES));
         when(crawlingTaskService.findAll()).thenReturn(Flux.just(task));
 
@@ -42,7 +42,7 @@ public class CrawlingTaskControllerTest {
     }
 
     @Test
-    public void addTask() {
+    public void addTaskShouldAddItToService() {
         CreateCrawlingTaskRequest request = new CreateCrawlingTaskRequest("google.com", LocalDateTime.now(), Duration.ZERO);
 
         webClient.post()
@@ -58,7 +58,7 @@ public class CrawlingTaskControllerTest {
     }
 
     @Test
-    public void removeExistentTask() {
+    public void removeExistentTaskShouldReturnOk() {
         String existentTaskId = "P2f45";
         when(crawlingTaskService.removeTask(eq(existentTaskId))).thenReturn(Mono.empty());
 
@@ -69,5 +69,18 @@ public class CrawlingTaskControllerTest {
                 .expectStatus().isOk();
 
         verify(crawlingTaskService, only()).removeTask(eq(existentTaskId));
+    }
+
+    @Test
+    public void removeNonexistentTaskShouldReturn404k() {
+        String nonexistentTaskId = "40sdg";
+        doThrow(new TaskNotFoundException(nonexistentTaskId))
+                .when(crawlingTaskService).removeTask(eq(nonexistentTaskId));
+
+        webClient.delete()
+                .uri(TASK_PATH, nonexistentTaskId)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .exchange()
+                .expectStatus().isNotFound();
     }
 }

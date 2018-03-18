@@ -34,7 +34,7 @@ public class DefaultCrawlingTaskService implements CrawlingTaskService {
     public Mono<Void> removeTask(String taskId) {
         return repository.findById(taskId)
                 .doOnSuccess(ct -> this.checkForEmpty(ct, taskId))
-                .doOnSuccess(this::cancelIfIdle)
+                .doOnSuccess(this::cancelSchedulingIfIdle)
                 .doOnSuccess(repository::delete)
                 .then();
     }
@@ -45,7 +45,7 @@ public class DefaultCrawlingTaskService implements CrawlingTaskService {
         }
     }
 
-    private void cancelIfIdle(CrawlingTask task) {
+    private void cancelSchedulingIfIdle(CrawlingTask task) {
         if (task.getExecutionStatus() == ExecutionStatus.IDLE) {
             scheduler.cancelScheduling(task);
         }
