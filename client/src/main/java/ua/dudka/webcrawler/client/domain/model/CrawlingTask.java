@@ -36,4 +36,10 @@ public class CrawlingTask {
         this.duration = duration;
         this.executionStatus = executionStatus;
     }
+
+    CrawlingTask() {
+        this.startPage = "";
+        this.startTime = LocalDateTime.now();
+        this.duration = Duration.ZERO;
+    }
 }

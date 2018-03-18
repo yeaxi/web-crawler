@@ -21,7 +21,8 @@ public class DefaultCrawlingTaskService implements CrawlingTaskService {
     @Override
     public Mono<CrawlingTask> addTask(CreateCrawlingTaskRequest request) {
         CrawlingTask task = new CrawlingTask(request.getUrl(), request.getStartTime(), request.getDuration());
-        return repository.save(task).doOnSuccess(scheduler::scheduleExecution);
+        return repository.save(task)
+                .doOnSuccess(scheduler::scheduleExecution);
     }
 
     @Override
@@ -32,15 +33,15 @@ public class DefaultCrawlingTaskService implements CrawlingTaskService {
     @Override
     public Mono<Void> removeTask(String taskId) {
         return repository.findById(taskId)
-                .doOnSuccess(this::checkForEmpty)
+                .doOnSuccess(ct -> this.checkForEmpty(ct, taskId))
                 .doOnSuccess(this::cancelIfIdle)
                 .doOnSuccess(repository::delete)
-                .then().log();
+                .then();
     }
 
-    private void checkForEmpty(CrawlingTask ct) {
+    private void checkForEmpty(CrawlingTask ct, String taskId) {
         if (ct == null) {
-            throw new TaskNotFoundException("1234");
+            throw new TaskNotFoundException(taskId);
         }
     }
 
