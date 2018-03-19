@@ -1,4 +1,4 @@
-package ua.dudka.webcrawler.client.app.env;
+package ua.dudka.webcrawler.client.domain.service;
 
 import ua.dudka.webcrawler.client.domain.model.CrawlingTask;
 

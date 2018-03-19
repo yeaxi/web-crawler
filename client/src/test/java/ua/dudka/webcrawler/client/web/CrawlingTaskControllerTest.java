@@ -6,13 +6,12 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ua.dudka.webcrawler.client.domain.model.CrawlingTask;
+import ua.dudka.webcrawler.client.domain.model.StartPage;
 import ua.dudka.webcrawler.client.domain.service.CrawlingTaskService;
 import ua.dudka.webcrawler.client.exception.TaskNotFoundException;
 import ua.dudka.webcrawler.client.web.dto.CreateCrawlingTaskRequest;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -23,13 +22,13 @@ public class CrawlingTaskControllerTest {
 
     private CrawlingTaskService crawlingTaskService = mock(CrawlingTaskService.class);
 
-    private WebTestClient webClient = WebTestClient.bindToController(new CrawlingTaskController(crawlingTaskService), new CrawlingTaskController.WebTaskExceptionHandler())
+    private WebTestClient webClient = WebTestClient.bindToController(new CrawlingTaskController(crawlingTaskService), new CrawlingTaskController.CrawlingTaskExceptionHandler())
             .configureClient()
             .build();
 
     @Test
     public void getAllTasksShouldReturnTasksFromService() {
-        CrawlingTask task = new CrawlingTask("https://google.com", LocalDateTime.now(), Duration.of(1, ChronoUnit.MINUTES));
+        CrawlingTask task = new CrawlingTask(StartPage.of("https://google.com"), LocalDateTime.now());
         when(crawlingTaskService.findAll()).thenReturn(Flux.just(task));
 
         webClient.get()
@@ -43,7 +42,7 @@ public class CrawlingTaskControllerTest {
 
     @Test
     public void addTaskShouldAddItToService() {
-        CreateCrawlingTaskRequest request = new CreateCrawlingTaskRequest("google.com", LocalDateTime.now(), Duration.ZERO);
+        CreateCrawlingTaskRequest request = new CreateCrawlingTaskRequest("google.com", LocalDateTime.now(), 100);
 
         webClient.post()
                 .uri(TASKS_PATH)

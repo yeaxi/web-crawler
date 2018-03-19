@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 
@@ -14,5 +13,5 @@ import java.time.LocalDateTime;
 public class CreateCrawlingTaskRequest {
     private String url;
     private LocalDateTime startTime;
-    private Duration duration;
+    private int maxVisitedLinks;
 }

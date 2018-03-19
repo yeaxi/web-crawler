@@ -4,9 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import ua.dudka.webcrawler.client.app.env.CrawlingTaskScheduler;
 import ua.dudka.webcrawler.client.domain.model.CrawlingTask;
 import ua.dudka.webcrawler.client.domain.model.ExecutionStatus;
+import ua.dudka.webcrawler.client.domain.model.StartPage;
+import ua.dudka.webcrawler.client.domain.service.CrawlingTaskScheduler;
 import ua.dudka.webcrawler.client.domain.service.CrawlingTaskService;
 import ua.dudka.webcrawler.client.exception.TaskNotFoundException;
 import ua.dudka.webcrawler.client.repository.CrawlingTaskRepository;
@@ -20,7 +21,7 @@ public class DefaultCrawlingTaskService implements CrawlingTaskService {
 
     @Override
     public Mono<CrawlingTask> addTask(CreateCrawlingTaskRequest request) {
-        CrawlingTask task = new CrawlingTask(request.getUrl(), request.getStartTime(), request.getDuration());
+        CrawlingTask task = new CrawlingTask(StartPage.of(request.getUrl(),request.getMaxVisitedLinks()), request.getStartTime());
         return repository.save(task)
                 .doOnSuccess(scheduler::scheduleExecution);
     }

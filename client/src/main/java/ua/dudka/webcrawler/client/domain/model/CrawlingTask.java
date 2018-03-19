@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -20,26 +19,22 @@ public class CrawlingTask {
     @Id
     private final String id = UUID.randomUUID().toString();
 
-    private final String startPage;
+    private final StartPage startPage;
     private final LocalDateTime startTime;
-    private final Duration duration;
     private ExecutionStatus executionStatus = ExecutionStatus.IDLE;
 
     @JsonCreator
     public CrawlingTask(
-            @JsonProperty("startPage") String startPage,
+            @JsonProperty("startPage") StartPage startPage,
             @JsonProperty("startTime") LocalDateTime startTime,
-            @JsonProperty("duration") Duration duration,
             @JsonProperty("executionStatus") ExecutionStatus executionStatus) {
         this.startPage = startPage;
         this.startTime = startTime;
-        this.duration = duration;
         this.executionStatus = executionStatus;
     }
 
     CrawlingTask() {
-        this.startPage = "";
+        this.startPage = StartPage.of("", 0);
         this.startTime = LocalDateTime.now();
-        this.duration = Duration.ZERO;
     }
 }

@@ -45,8 +45,7 @@ public class CrawlingTaskController {
     }
 
     @RestControllerAdvice
-    public static class WebTaskExceptionHandler {
-
+    public static class CrawlingTaskExceptionHandler {
 
         @ResponseStatus(HttpStatus.NOT_FOUND)
         @ExceptionHandler(TaskNotFoundException.class)
