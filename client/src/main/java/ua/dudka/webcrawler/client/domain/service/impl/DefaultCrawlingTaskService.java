@@ -21,7 +21,7 @@ public class DefaultCrawlingTaskService implements CrawlingTaskService {
 
     @Override
     public Mono<CrawlingTask> addTask(CreateCrawlingTaskRequest request) {
-        CrawlingTask task = new CrawlingTask(StartPage.of(request.getUrl(),request.getMaxVisitedLinks()), request.getStartTime());
+        CrawlingTask task = new CrawlingTask(StartPage.of(request.getUrl(), request.getMaxVisitedLinks()), request.getStartTime());
         return repository.save(task)
                 .doOnSuccess(scheduler::scheduleExecution);
     }
