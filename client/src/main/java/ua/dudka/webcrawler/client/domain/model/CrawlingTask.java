@@ -21,7 +21,7 @@ public class CrawlingTask {
 
     private final StartPage startPage;
     private final LocalDateTime startTime;
-    private ExecutionStatus executionStatus = ExecutionStatus.IDLE;
+    private ExecutionStatus executionStatus = ExecutionStatus.SCHEDULED;
 
     @JsonCreator
     public CrawlingTask(

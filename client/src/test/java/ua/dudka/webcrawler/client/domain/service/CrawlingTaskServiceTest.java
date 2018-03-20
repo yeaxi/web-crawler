@@ -38,7 +38,7 @@ public class CrawlingTaskServiceTest {
         assertThat(task.getId()).isNotBlank();
         assertThat(task.getStartPage()).isEqualTo(StartPage.of(request.getUrl(), 1));
         assertThat(task.getStartTime()).isEqualTo(request.getStartTime());
-        assertThat(task.getExecutionStatus()).isEqualTo(ExecutionStatus.IDLE);
+        assertThat(task.getExecutionStatus()).isEqualTo(ExecutionStatus.SCHEDULED);
     }
 
     @Test

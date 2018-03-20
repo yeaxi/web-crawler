@@ -47,7 +47,7 @@ public class DefaultCrawlingTaskService implements CrawlingTaskService {
     }
 
     private void cancelSchedulingIfIdle(CrawlingTask task) {
-        if (task.getExecutionStatus() == ExecutionStatus.IDLE) {
+        if (task.getExecutionStatus() == ExecutionStatus.SCHEDULED) {
             scheduler.cancelScheduling(task);
         }
     }

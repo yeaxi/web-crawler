@@ -1,7 +1,7 @@
 package ua.dudka.webcrawler.client.domain.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ua.dudka.webcrawler.client.app.env.CrawlingTaskExecutorSender;
 import ua.dudka.webcrawler.client.domain.model.CrawlingTask;
 import ua.dudka.webcrawler.client.domain.service.CrawlingTaskScheduler;
@@ -13,7 +13,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class DefaultCrawlingTaskScheduler implements CrawlingTaskScheduler {
     private final ScheduledExecutorService executorService;
@@ -24,11 +24,11 @@ public class DefaultCrawlingTaskScheduler implements CrawlingTaskScheduler {
     @Override
     public void scheduleExecution(CrawlingTask task) {
         ScheduledFuture<?> future = executorService.schedule(() -> sender.sendForExecution(task),
-                countDelayInSeconds(task.getStartTime()), TimeUnit.SECONDS);
+                delayFrom(task.getStartTime()), TimeUnit.SECONDS);
         tasks.put(task, future);
     }
 
-    private long countDelayInSeconds(LocalDateTime startTime) {
+    private long delayFrom(LocalDateTime startTime) {
         return ChronoUnit.SECONDS.between(LocalDateTime.now(), startTime);
     }
 
