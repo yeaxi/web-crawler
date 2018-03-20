@@ -1,8 +1,8 @@
 package ua.dudka.webcrawler.client.domain.service;
 
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import ua.dudka.webcrawler.client.app.env.CrawlingTaskExecutorSender;
 import ua.dudka.webcrawler.client.domain.model.CrawlingTask;
 import ua.dudka.webcrawler.client.domain.model.StartPage;
@@ -23,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-public class CrawlingTaskSchedulerTest {
+class CrawlingTaskSchedulerTest {
 
     private ScheduledExecutorService mockExecutor = mock(ScheduledExecutorService.class);
     private Map<CrawlingTask, ScheduledFuture> tasks = new HashMap<>();
@@ -33,8 +33,8 @@ public class CrawlingTaskSchedulerTest {
 
     private ScheduledFuture<?> mockFuture = mock(ScheduledFuture.class);
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         when(mockExecutor.schedule(any(Runnable.class), anyLong(), any(TimeUnit.class))).thenAnswer(invocation -> {
             Thread.sleep(invocation.getArgument(1));
             ((Runnable) invocation.getArgument(0)).run();
@@ -48,7 +48,7 @@ public class CrawlingTaskSchedulerTest {
     }
 
     @Test
-    public void scheduleExecutionShouldSendTaskForExecution() throws Exception {
+    void scheduleExecutionShouldSendTaskForExecution() throws Exception {
         CrawlingTask task = new CrawlingTask(StartPage.of("page"), now());
 
         scheduler.scheduleExecution(task);
@@ -62,7 +62,7 @@ public class CrawlingTaskSchedulerTest {
     }
 
     @Test
-    public void scheduleExecutionShouldAddTaskToContainer() {
+    void scheduleExecutionShouldAddTaskToContainer() {
         CrawlingTask task = new CrawlingTask(StartPage.of("page"), now());
 
         scheduler.scheduleExecution(task);
@@ -73,12 +73,14 @@ public class CrawlingTaskSchedulerTest {
     }
 
     @Test
-    public void cancelSchedulingShouldCancelFutureByTask() {
+    void cancelSchedulingShouldCancelAndRemoveTask() {
         CrawlingTask task = new CrawlingTask(StartPage.of("page"), now().plusMinutes(1));
         scheduler.scheduleExecution(task);
+        ScheduledFuture future = tasks.get(task);
 
         scheduler.cancelScheduling(task);
 
-        assertThat(tasks.get(task).isCancelled()).isTrue();
+        assertThat(future.isCancelled()).isTrue();
+        assertThat(tasks.containsKey(task)).isFalse();
     }
 }

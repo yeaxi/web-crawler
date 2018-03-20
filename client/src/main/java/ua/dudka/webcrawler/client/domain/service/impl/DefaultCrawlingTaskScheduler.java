@@ -35,5 +35,6 @@ public class DefaultCrawlingTaskScheduler implements CrawlingTaskScheduler {
     @Override
     public void cancelScheduling(CrawlingTask task) {
         tasks.get(task).cancel(false);
+        tasks.remove(task);
     }
 }
