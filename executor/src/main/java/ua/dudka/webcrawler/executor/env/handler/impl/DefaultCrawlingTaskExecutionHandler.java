@@ -1,9 +1,10 @@
-package ua.dudka.webcrawler.executor.env.handler;
+package ua.dudka.webcrawler.executor.env.handler.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.stereotype.Component;
-import ua.dudka.webcrawler.executor.config.stream.CrawlingTaskStreams;
+import ua.dudka.webcrawler.executor.env.handler.CrawlingTaskExecutionHandler;
+import ua.dudka.webcrawler.executor.env.stream.CrawlingTaskStreams;
 import ua.dudka.webcrawler.executor.domain.model.ExecuteCrawlingTaskEvent;
 import ua.dudka.webcrawler.executor.domain.service.CrawlingTaskExecutor;
 

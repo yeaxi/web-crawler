@@ -3,6 +3,7 @@ package ua.dudka.webcrawler.executor.env.handler;
 import org.junit.jupiter.api.Test;
 import ua.dudka.webcrawler.executor.domain.model.ExecuteCrawlingTaskEvent;
 import ua.dudka.webcrawler.executor.domain.service.CrawlingTaskExecutor;
+import ua.dudka.webcrawler.executor.env.handler.impl.DefaultCrawlingTaskExecutionHandler;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
