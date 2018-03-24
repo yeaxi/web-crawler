@@ -1,0 +1,13 @@
+spring:
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+      bindings:
+        execute_task_stream:
+          destination: execute_task_stream
+          contentType: application/json
+        update_task_stream:
+          destination: update_task_stream
+          contentType: application/json
