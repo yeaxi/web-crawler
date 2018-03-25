@@ -1,8 +1,9 @@
 spring:
-  kafka:
-    bootstrap-servers: ${spring.embedded.kafka.brokers}
   cloud:
     stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
       bindings:
         execute_task_stream:
           destination: execute_task_stream
