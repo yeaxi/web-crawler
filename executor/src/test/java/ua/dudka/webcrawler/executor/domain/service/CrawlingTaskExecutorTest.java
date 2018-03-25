@@ -1,9 +1,8 @@
 package ua.dudka.webcrawler.executor.domain.service;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import ua.dudka.webcrawler.executor.domain.model.ExecuteCrawlingTaskEvent;
-import ua.dudka.webcrawler.executor.domain.model.UpdateCrawlingTaskEvent;
+import ua.dudka.webcrawler.executor.domain.event.ExecuteCrawlingTaskEvent;
+import ua.dudka.webcrawler.executor.domain.event.UpdateCrawlingTaskEvent;
 import ua.dudka.webcrawler.executor.domain.service.impl.DefaultCrawlingTaskExecutor;
 import ua.dudka.webcrawler.executor.env.publisher.UpdateCrawlingTaskEventPublisher;
 

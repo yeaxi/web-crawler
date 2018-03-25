@@ -1,7 +1,7 @@
 package ua.dudka.webcrawler.executor.env.handler;
 
 import org.junit.jupiter.api.Test;
-import ua.dudka.webcrawler.executor.domain.model.ExecuteCrawlingTaskEvent;
+import ua.dudka.webcrawler.executor.domain.event.ExecuteCrawlingTaskEvent;
 import ua.dudka.webcrawler.executor.domain.service.CrawlingTaskExecutor;
 import ua.dudka.webcrawler.executor.env.handler.impl.DefaultExecuteCrawlingTaskEventHandler;
 

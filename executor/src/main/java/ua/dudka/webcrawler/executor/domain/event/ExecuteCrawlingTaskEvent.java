@@ -1,4 +1,4 @@
-package ua.dudka.webcrawler.executor.domain.model;
+package ua.dudka.webcrawler.executor.domain.event;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
