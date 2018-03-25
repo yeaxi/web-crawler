@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import ua.dudka.webcrawler.executor.domain.model.ExecuteCrawlingTaskEvent;
 import ua.dudka.webcrawler.executor.domain.service.CrawlingTaskExecutor;
 import ua.dudka.webcrawler.executor.env.handler.ExecuteCrawlingTaskEventHandler;
-import ua.dudka.webcrawler.executor.env.stream.CrawlingTaskStreams;
+import ua.dudka.webcrawler.executor.env.config.CrawlingTaskStreams;
 
 @Component
 @RequiredArgsConstructor
