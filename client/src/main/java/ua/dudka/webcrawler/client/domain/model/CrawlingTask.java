@@ -37,4 +37,8 @@ public class CrawlingTask {
         this.startPage = StartPage.of("", 0);
         this.startTime = LocalDateTime.now();
     }
+
+    public void addVisitedLink(String link) {
+        startPage.addVisitedLink(link);
+    }
 }
