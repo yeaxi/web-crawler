@@ -7,6 +7,12 @@ spring:
         execute_task_stream:
           destination: execute_task_stream
           contentType: application/json
+          group: executors
         update_task_stream:
           destination: update_task_stream
           contentType: application/json
+          group: test_reciver
+eureka:
+  client:
+    enabled: false
+
