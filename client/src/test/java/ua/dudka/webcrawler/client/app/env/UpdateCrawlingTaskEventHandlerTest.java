@@ -3,9 +3,10 @@ package ua.dudka.webcrawler.client.app.env;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
+import ua.dudka.webcrawler.client.app.env.event.ExecuteCrawlingTaskEvent;
 import ua.dudka.webcrawler.client.app.env.event.UpdateCrawlingTaskEvent;
 import ua.dudka.webcrawler.client.app.env.impl.DefaultUpdateCrawlingTaskEventHandler;
-import ua.dudka.webcrawler.client.app.env.impl.DummyCrawlingTaskExecutorSender;
+import ua.dudka.webcrawler.client.app.env.impl.DummyExecuteCrawlingTaskEventSender;
 import ua.dudka.webcrawler.client.domain.model.CrawlingTask;
 import ua.dudka.webcrawler.client.repository.CrawlingTaskRepository;
 
@@ -21,7 +22,7 @@ class UpdateCrawlingTaskEventHandlerTest {
     private static final String EXISTENT_ID = "2";
 
     private CrawlingTaskRepository repository = mock(CrawlingTaskRepository.class);
-    private CrawlingTaskExecutorSender sender = spy(DummyCrawlingTaskExecutorSender.class);
+    private ExecuteCrawlingTaskEventSender sender = spy(DummyExecuteCrawlingTaskEventSender.class);
     private UpdateCrawlingTaskEventHandler handler = new DefaultUpdateCrawlingTaskEventHandler(repository, sender);
 
     private CrawlingTask crawlingTask = new CrawlingTask("", 1, LocalDateTime.now());
@@ -46,7 +47,7 @@ class UpdateCrawlingTaskEventHandlerTest {
         UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent(EXISTENT_ID, VISITED_LINK);
         handler.handle(event).block();
 
-        verify(sender).sendForExecution(crawlingTask);
+        verify(sender).sendForExecution(eq(new ExecuteCrawlingTaskEvent(event.getTaskId(), event.getVisitedLink())));
     }
 
     @Test
@@ -67,7 +68,7 @@ class UpdateCrawlingTaskEventHandlerTest {
 
         handler.handle(event);
 
-        verify(repository, never()).save(eq(task));
+        verify(repository, never()).save(any(CrawlingTask.class));
     }
 
     @Test
@@ -80,7 +81,7 @@ class UpdateCrawlingTaskEventHandlerTest {
 
         handler.handle(event);
 
-        verify(sender, never()).sendForExecution(eq(task));
+        verify(sender, never()).sendForExecution(any(ExecuteCrawlingTaskEvent.class));
 
     }
 

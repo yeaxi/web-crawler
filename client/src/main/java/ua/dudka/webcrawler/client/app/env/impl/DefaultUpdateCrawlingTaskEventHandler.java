@@ -3,8 +3,9 @@ package ua.dudka.webcrawler.client.app.env.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-import ua.dudka.webcrawler.client.app.env.CrawlingTaskExecutorSender;
+import ua.dudka.webcrawler.client.app.env.ExecuteCrawlingTaskEventSender;
 import ua.dudka.webcrawler.client.app.env.UpdateCrawlingTaskEventHandler;
+import ua.dudka.webcrawler.client.app.env.event.ExecuteCrawlingTaskEvent;
 import ua.dudka.webcrawler.client.app.env.event.UpdateCrawlingTaskEvent;
 import ua.dudka.webcrawler.client.repository.CrawlingTaskRepository;
 
@@ -12,7 +13,7 @@ import ua.dudka.webcrawler.client.repository.CrawlingTaskRepository;
 @RequiredArgsConstructor
 public class DefaultUpdateCrawlingTaskEventHandler implements UpdateCrawlingTaskEventHandler {
     private final CrawlingTaskRepository repository;
-    private final CrawlingTaskExecutorSender sender;
+    private final ExecuteCrawlingTaskEventSender sender;
 
     @Override
     public Mono<Void> handle(UpdateCrawlingTaskEvent event) {
@@ -22,6 +23,7 @@ public class DefaultUpdateCrawlingTaskEventHandler implements UpdateCrawlingTask
                     return task;
                 })
                 .flatMap(repository::save)
+                .map(t -> new ExecuteCrawlingTaskEvent(event.getTaskId(), event.getVisitedLink()))
                 .doOnSuccess(sender::sendForExecution)
                 .then();
     }

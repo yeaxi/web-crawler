@@ -3,7 +3,8 @@ package ua.dudka.webcrawler.client.domain.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ua.dudka.webcrawler.client.app.env.CrawlingTaskExecutorSender;
+import ua.dudka.webcrawler.client.app.env.ExecuteCrawlingTaskEventSender;
+import ua.dudka.webcrawler.client.app.env.event.ExecuteCrawlingTaskEvent;
 import ua.dudka.webcrawler.client.domain.model.CrawlingTask;
 import ua.dudka.webcrawler.client.domain.service.impl.DefaultCrawlingTaskScheduler;
 
@@ -15,7 +16,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,7 +26,7 @@ class CrawlingTaskSchedulerTest {
 
     private ScheduledExecutorService mockExecutor = mock(ScheduledExecutorService.class);
     private Map<CrawlingTask, ScheduledFuture> tasks = new HashMap<>();
-    private CrawlingTaskExecutorSender sender = mock(CrawlingTaskExecutorSender.class);
+    private ExecuteCrawlingTaskEventSender sender = mock(ExecuteCrawlingTaskEventSender.class);
 
     private CrawlingTaskScheduler scheduler = new DefaultCrawlingTaskScheduler(mockExecutor, tasks, sender);
 
@@ -53,7 +53,7 @@ class CrawlingTaskSchedulerTest {
         scheduler.scheduleExecution(task);
 
         verify(mockExecutor).schedule(any(Runnable.class), eq(countDelayInSeconds(task.getStartTime())), eq(TimeUnit.SECONDS));
-        verify(sender).sendForExecution(eq(task));
+        verify(sender).sendForExecution(eq(new ExecuteCrawlingTaskEvent(task.getId(), task.getStartPage())));
     }
 
     private long countDelayInSeconds(LocalDateTime startTime) {
