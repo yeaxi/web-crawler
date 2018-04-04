@@ -22,7 +22,7 @@ class UpdateCrawlingTaskEventHandlerTest {
     private static final String EXISTENT_ID = "2";
 
     private CrawlingTaskRepository repository = mock(CrawlingTaskRepository.class);
-    private CrawlingTaskExecutorSender sender = mock(DummyCrawlingTaskExecutorSender.class);
+    private CrawlingTaskExecutorSender sender = spy(DummyCrawlingTaskExecutorSender.class);
     private UpdateCrawlingTaskEventHandler handler = new DefaultUpdateCrawlingTaskEventHandler(repository, sender);
 
     private CrawlingTask crawlingTask = new CrawlingTask(StartPage.of("start_link.com"), LocalDateTime.now());
@@ -31,12 +31,13 @@ class UpdateCrawlingTaskEventHandlerTest {
     @BeforeEach
     void setUp() {
         when(repository.findById(eq(EXISTENT_ID))).thenReturn(Mono.just(crawlingTask));
+        when(repository.save(any(CrawlingTask.class))).thenAnswer(a -> Mono.just(a.getArgument(0)));
     }
 
     @Test
     void handleEventWithExistentIdShouldSaveUpdatedTask() {
         UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent(EXISTENT_ID, VISITED_LINK);
-        handler.handle(event);
+        handler.handle(event).block();
 
         verify(repository).save(crawlingTask);
     }
@@ -44,7 +45,7 @@ class UpdateCrawlingTaskEventHandlerTest {
     @Test
     void handleEventWithExistentIdShouldSendForExecutionUpdatedTask() {
         UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent(EXISTENT_ID, VISITED_LINK);
-        handler.handle(event);
+        handler.handle(event).block();
 
         verify(sender).sendForExecution(crawlingTask);
     }
@@ -52,7 +53,7 @@ class UpdateCrawlingTaskEventHandlerTest {
     @Test
     void handleEventWithExistentIdShouldUpdateCrawlingTask() {
         UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent(EXISTENT_ID, VISITED_LINK);
-        handler.handle(event);
+        handler.handle(event).block();
 
         assertThat(crawlingTask.getStartPage().getVisitedLinks()).containsOnly(VISITED_LINK);
     }
@@ -62,9 +63,39 @@ class UpdateCrawlingTaskEventHandlerTest {
         CrawlingTask task = new CrawlingTask(StartPage.of("", 1), LocalDateTime.now());
         task.addVisitedLink("link");
         when(repository.findById("1")).thenReturn(Mono.just(task));
-        UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent(EXISTENT_ID, VISITED_LINK);
+        UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent("1", VISITED_LINK);
+
+        
         handler.handle(event);
 
-        assertThat(crawlingTask.getStartPage().getVisitedLinks()).containsOnly(VISITED_LINK);
+        verify(repository, never()).save(eq(task));
+    }
+
+    @Test
+    void givenCrawlingTaskWithMaxVisitedLinks_WhenNewUpdateEventComes_Then_TaskShouldNotBeSentToExecution() {
+        CrawlingTask task = new CrawlingTask(StartPage.of("", 1), LocalDateTime.now());
+        task.addVisitedLink("link");
+        when(repository.findById("1")).thenReturn(Mono.just(task));
+        UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent("1", VISITED_LINK);
+
+
+        handler.handle(event);
+
+        verify(sender, never()).sendForExecution(eq(task));
+
+    }
+
+
+    @Test
+    void givenCrawlingTaskWithMaxVisitedLinks_WhenNewUpdateEventComes_Then_TaskShouldNotContainNewVisitedLink() {
+        CrawlingTask task = new CrawlingTask(StartPage.of("", 1), LocalDateTime.now());
+        task.addVisitedLink("link");
+        when(repository.findById("1")).thenReturn(Mono.just(task));
+        UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent("1", VISITED_LINK);
+
+
+        handler.handle(event);
+
+        assertThat(task.getStartPage().getVisitedLinks()).containsOnly("link");
     }
 }
