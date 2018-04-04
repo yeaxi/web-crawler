@@ -8,8 +8,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
-
+import java.util.concurrent.ConcurrentHashMap;
 
 @Document
 @Data
@@ -19,26 +20,34 @@ public class CrawlingTask {
     @Id
     private final String id = UUID.randomUUID().toString();
 
-    private final StartPage startPage;
+    private final String startPage;
+    private final int maxVisitedLinks;
+    private final Set<String> visitedLinks = ConcurrentHashMap.newKeySet();
+
     private final LocalDateTime startTime;
     private ExecutionStatus executionStatus = ExecutionStatus.SCHEDULED;
 
     @JsonCreator
     public CrawlingTask(
-            @JsonProperty("startPage") StartPage startPage,
+            @JsonProperty("startPage") String startPage,
+            @JsonProperty("maxVisitedLinks") int maxVisitedLinks,
             @JsonProperty("startTime") LocalDateTime startTime,
             @JsonProperty("executionStatus") ExecutionStatus executionStatus) {
         this.startPage = startPage;
+        this.maxVisitedLinks = maxVisitedLinks;
         this.startTime = startTime;
         this.executionStatus = executionStatus;
     }
 
-    CrawlingTask() {
-        this.startPage = StartPage.of("", 0);
+    public CrawlingTask() {
+        this.startPage = "";
+        this.maxVisitedLinks = 0;
         this.startTime = LocalDateTime.now();
     }
 
     public void addVisitedLink(String link) {
-        startPage.addVisitedLink(link);
+        if (visitedLinks.size() < maxVisitedLinks) {
+            visitedLinks.add(link);
+        }
     }
 }

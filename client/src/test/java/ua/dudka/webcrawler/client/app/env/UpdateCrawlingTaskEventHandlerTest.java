@@ -7,7 +7,6 @@ import ua.dudka.webcrawler.client.app.env.event.UpdateCrawlingTaskEvent;
 import ua.dudka.webcrawler.client.app.env.impl.DefaultUpdateCrawlingTaskEventHandler;
 import ua.dudka.webcrawler.client.app.env.impl.DummyCrawlingTaskExecutorSender;
 import ua.dudka.webcrawler.client.domain.model.CrawlingTask;
-import ua.dudka.webcrawler.client.domain.model.StartPage;
 import ua.dudka.webcrawler.client.repository.CrawlingTaskRepository;
 
 import java.time.LocalDateTime;
@@ -25,7 +24,7 @@ class UpdateCrawlingTaskEventHandlerTest {
     private CrawlingTaskExecutorSender sender = spy(DummyCrawlingTaskExecutorSender.class);
     private UpdateCrawlingTaskEventHandler handler = new DefaultUpdateCrawlingTaskEventHandler(repository, sender);
 
-    private CrawlingTask crawlingTask = new CrawlingTask(StartPage.of("start_link.com"), LocalDateTime.now());
+    private CrawlingTask crawlingTask = new CrawlingTask("", 1, LocalDateTime.now());
 
 
     @BeforeEach
@@ -55,17 +54,17 @@ class UpdateCrawlingTaskEventHandlerTest {
         UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent(EXISTENT_ID, VISITED_LINK);
         handler.handle(event).block();
 
-        assertThat(crawlingTask.getStartPage().getVisitedLinks()).containsOnly(VISITED_LINK);
+        assertThat(crawlingTask.getVisitedLinks()).containsOnly(VISITED_LINK);
     }
 
     @Test
     void givenCrawlingTaskWithMaxVisitedLinks_WhenNewUpdateEventComes_Then_TaskShouldNotBeSavedToDB() {
-        CrawlingTask task = new CrawlingTask(StartPage.of("", 1), LocalDateTime.now());
+        CrawlingTask task = new CrawlingTask("", 1, LocalDateTime.now());
         task.addVisitedLink("link");
         when(repository.findById("1")).thenReturn(Mono.just(task));
         UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent("1", VISITED_LINK);
 
-        
+
         handler.handle(event);
 
         verify(repository, never()).save(eq(task));
@@ -73,7 +72,7 @@ class UpdateCrawlingTaskEventHandlerTest {
 
     @Test
     void givenCrawlingTaskWithMaxVisitedLinks_WhenNewUpdateEventComes_Then_TaskShouldNotBeSentToExecution() {
-        CrawlingTask task = new CrawlingTask(StartPage.of("", 1), LocalDateTime.now());
+        CrawlingTask task = new CrawlingTask("", 1, LocalDateTime.now());
         task.addVisitedLink("link");
         when(repository.findById("1")).thenReturn(Mono.just(task));
         UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent("1", VISITED_LINK);
@@ -88,7 +87,7 @@ class UpdateCrawlingTaskEventHandlerTest {
 
     @Test
     void givenCrawlingTaskWithMaxVisitedLinks_WhenNewUpdateEventComes_Then_TaskShouldNotContainNewVisitedLink() {
-        CrawlingTask task = new CrawlingTask(StartPage.of("", 1), LocalDateTime.now());
+        CrawlingTask task = new CrawlingTask("", 1, LocalDateTime.now());
         task.addVisitedLink("link");
         when(repository.findById("1")).thenReturn(Mono.just(task));
         UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent("1", VISITED_LINK);
@@ -96,6 +95,6 @@ class UpdateCrawlingTaskEventHandlerTest {
 
         handler.handle(event);
 
-        assertThat(task.getStartPage().getVisitedLinks()).containsOnly("link");
+        assertThat(task.getVisitedLinks()).containsOnly("link");
     }
 }

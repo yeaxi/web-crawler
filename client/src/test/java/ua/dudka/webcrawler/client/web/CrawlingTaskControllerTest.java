@@ -6,7 +6,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ua.dudka.webcrawler.client.domain.model.CrawlingTask;
-import ua.dudka.webcrawler.client.domain.model.StartPage;
 import ua.dudka.webcrawler.client.domain.service.CrawlingTaskService;
 import ua.dudka.webcrawler.client.exception.TaskNotFoundException;
 import ua.dudka.webcrawler.client.web.dto.CreateCrawlingTaskRequest;
@@ -28,7 +27,7 @@ public class CrawlingTaskControllerTest {
 
     @Test
     public void getAllTasksShouldReturnTasksFromService() {
-        CrawlingTask task = new CrawlingTask(StartPage.of("https://google.com"), LocalDateTime.now());
+        CrawlingTask task = new CrawlingTask("https://google.com",1, LocalDateTime.now());
         when(crawlingTaskService.findAll()).thenReturn(Flux.just(task));
 
         webClient.get()

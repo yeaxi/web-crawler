@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.dudka.webcrawler.client.domain.model.CrawlingTask;
-import ua.dudka.webcrawler.client.domain.model.StartPage;
 
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -24,7 +23,7 @@ public class CrawlingTaskRepositoryTest {
 
     @Test
     public void saveAndDeleteTaskById() {
-        CrawlingTask task = new CrawlingTask(StartPage.of("ss"), now());
+        CrawlingTask task = new CrawlingTask();
         repository.save(task).block();
 
         assertThat(repository.findById(task.getId()).block()).isNotNull();
@@ -37,9 +36,9 @@ public class CrawlingTaskRepositoryTest {
     @Test
     public void findAllShouldReturnCreatedTasks() {
         List<CrawlingTask> tasks = List.of(
-                new CrawlingTask(StartPage.of("ss"), now().truncatedTo(ChronoUnit.SECONDS)),
-                new CrawlingTask(StartPage.of("ss"), now().truncatedTo(ChronoUnit.SECONDS)),
-                new CrawlingTask(StartPage.of("ss"), now().truncatedTo(ChronoUnit.SECONDS)));
+                new CrawlingTask("ss", 1, now().truncatedTo(ChronoUnit.SECONDS)),
+                new CrawlingTask("ss", 1, now().truncatedTo(ChronoUnit.SECONDS)),
+                new CrawlingTask("ss", 1, now().truncatedTo(ChronoUnit.SECONDS)));
         repository.saveAll(tasks).then().block();
 
         assertThat(repository.findAll().toStream()

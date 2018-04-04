@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ua.dudka.webcrawler.client.app.env.CrawlingTaskExecutorSender;
 import ua.dudka.webcrawler.client.domain.model.CrawlingTask;
-import ua.dudka.webcrawler.client.domain.model.StartPage;
 import ua.dudka.webcrawler.client.domain.service.impl.DefaultCrawlingTaskScheduler;
 
 import java.time.LocalDateTime;
@@ -49,7 +48,7 @@ class CrawlingTaskSchedulerTest {
 
     @Test
     void scheduleExecutionShouldSendTaskForExecution() throws Exception {
-        CrawlingTask task = new CrawlingTask(StartPage.of("page"), now());
+        CrawlingTask task = new CrawlingTask();
 
         scheduler.scheduleExecution(task);
 
@@ -63,7 +62,7 @@ class CrawlingTaskSchedulerTest {
 
     @Test
     void scheduleExecutionShouldAddTaskToContainer() {
-        CrawlingTask task = new CrawlingTask(StartPage.of("page"), now());
+        CrawlingTask task = new CrawlingTask();
 
         scheduler.scheduleExecution(task);
         ScheduledFuture<?> future = tasks.get(task);
@@ -74,7 +73,7 @@ class CrawlingTaskSchedulerTest {
 
     @Test
     void cancelSchedulingShouldCancelAndRemoveTask() {
-        CrawlingTask task = new CrawlingTask(StartPage.of("page"), now().plusMinutes(1));
+        CrawlingTask task = new CrawlingTask();
         scheduler.scheduleExecution(task);
         ScheduledFuture future = tasks.get(task);
 

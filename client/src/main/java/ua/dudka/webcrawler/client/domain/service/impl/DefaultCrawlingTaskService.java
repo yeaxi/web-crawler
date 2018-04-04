@@ -6,7 +6,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ua.dudka.webcrawler.client.domain.model.CrawlingTask;
 import ua.dudka.webcrawler.client.domain.model.ExecutionStatus;
-import ua.dudka.webcrawler.client.domain.model.StartPage;
 import ua.dudka.webcrawler.client.domain.service.CrawlingTaskScheduler;
 import ua.dudka.webcrawler.client.domain.service.CrawlingTaskService;
 import ua.dudka.webcrawler.client.exception.TaskNotFoundException;
@@ -21,7 +20,7 @@ public class DefaultCrawlingTaskService implements CrawlingTaskService {
 
     @Override
     public Mono<CrawlingTask> addTask(CreateCrawlingTaskRequest request) {
-        CrawlingTask task = new CrawlingTask(StartPage.of(request.getUrl(), request.getMaxVisitedLinks()), request.getStartTime());
+        CrawlingTask task = new CrawlingTask(request.getUrl(), request.getMaxVisitedLinks(), request.getStartTime());
         return repository.save(task)
                 .doOnSuccess(scheduler::scheduleExecution);
     }
@@ -35,7 +34,7 @@ public class DefaultCrawlingTaskService implements CrawlingTaskService {
     public Mono<Void> removeTask(String taskId) {
         return repository.findById(taskId)
                 .doOnSuccess(ct -> this.checkForEmpty(ct, taskId))
-                .doOnSuccess(this::cancelSchedulingIfIdle)
+                .doOnSuccess(this::cancelScheduledTask)
                 .doOnSuccess(repository::delete)
                 .then();
     }
@@ -46,7 +45,7 @@ public class DefaultCrawlingTaskService implements CrawlingTaskService {
         }
     }
 
-    private void cancelSchedulingIfIdle(CrawlingTask task) {
+    private void cancelScheduledTask(CrawlingTask task) {
         if (task.getExecutionStatus() == ExecutionStatus.SCHEDULED) {
             scheduler.cancelScheduling(task);
         }

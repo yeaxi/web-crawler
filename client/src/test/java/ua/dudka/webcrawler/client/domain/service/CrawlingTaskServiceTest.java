@@ -5,7 +5,6 @@ import org.junit.Test;
 import reactor.core.publisher.Mono;
 import ua.dudka.webcrawler.client.domain.model.CrawlingTask;
 import ua.dudka.webcrawler.client.domain.model.ExecutionStatus;
-import ua.dudka.webcrawler.client.domain.model.StartPage;
 import ua.dudka.webcrawler.client.domain.service.impl.DefaultCrawlingTaskService;
 import ua.dudka.webcrawler.client.exception.TaskNotFoundException;
 import ua.dudka.webcrawler.client.repository.CrawlingTaskRepository;
@@ -36,7 +35,8 @@ public class CrawlingTaskServiceTest {
         CrawlingTask task = service.addTask(request).block();
 
         assertThat(task.getId()).isNotBlank();
-        assertThat(task.getStartPage()).isEqualTo(StartPage.of(request.getUrl(), 1));
+        assertThat(task.getStartPage()).isEqualTo(request.getUrl());
+        assertThat(task.getMaxVisitedLinks()).isEqualTo(request.getMaxVisitedLinks());
         assertThat(task.getStartTime()).isEqualTo(request.getStartTime());
         assertThat(task.getExecutionStatus()).isEqualTo(ExecutionStatus.SCHEDULED);
     }
@@ -59,7 +59,7 @@ public class CrawlingTaskServiceTest {
 
     @Test
     public void removeExistentTaskShouldDeleteItFromRepo() {
-        CrawlingTask task = new CrawlingTask(StartPage.of("testPage"), LocalDateTime.now());
+        CrawlingTask task = new CrawlingTask();
         when(repository.findById(task.getId())).thenReturn(Mono.just(task));
 
         service.removeTask(task.getId()).block();
@@ -78,7 +78,7 @@ public class CrawlingTaskServiceTest {
 
     @Test
     public void removeIdleTaskShouldCancelScheduling() {
-        CrawlingTask task = new CrawlingTask(StartPage.of("testPage"), LocalDateTime.now());
+        CrawlingTask task = new CrawlingTask();
         when(repository.findById(task.getId())).thenReturn(Mono.just(task));
 
         service.removeTask(task.getId()).block();
@@ -88,7 +88,7 @@ public class CrawlingTaskServiceTest {
 
     @Test
     public void removeRunningTaskShouldNOTCancelScheduling() {
-        CrawlingTask task = new CrawlingTask(StartPage.of("testPage", 1), LocalDateTime.now(), ExecutionStatus.RUNNING);
+        CrawlingTask task = new CrawlingTask("testPage", 1, LocalDateTime.now(), ExecutionStatus.RUNNING);
         when(repository.findById(task.getId())).thenReturn(Mono.just(task));
 
         service.removeTask(task.getId()).block();
@@ -99,7 +99,7 @@ public class CrawlingTaskServiceTest {
 
     @Test
     public void removeCompletedTaskShouldNOTCancelScheduling() {
-        CrawlingTask task = new CrawlingTask(StartPage.of("testPage", 1), LocalDateTime.now(), ExecutionStatus.COMPLETED);
+        CrawlingTask task = new CrawlingTask("testPage", 1, LocalDateTime.now(), ExecutionStatus.COMPLETED);
         when(repository.findById(task.getId())).thenReturn(Mono.just(task));
 
         service.removeTask(task.getId()).block();
@@ -110,7 +110,7 @@ public class CrawlingTaskServiceTest {
 
     @Test
     public void removeFailedTaskShouldNOTCancelScheduling() {
-        CrawlingTask task = new CrawlingTask(StartPage.of("testPage", 1), LocalDateTime.now(), ExecutionStatus.ERROR);
+        CrawlingTask task = new CrawlingTask("testPage", 1, LocalDateTime.now(), ExecutionStatus.ERROR);
         when(repository.findById(task.getId())).thenReturn(Mono.just(task));
 
         service.removeTask(task.getId()).block();
