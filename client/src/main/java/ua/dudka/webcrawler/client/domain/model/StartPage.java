@@ -31,7 +31,7 @@ public class StartPage {
     }
 
     public void addVisitedLink(String link) {
-        if (maxVisitedLinks < visitedLinks.size()) {
+        if (visitedLinks.size() < maxVisitedLinks) {
             visitedLinks.add(link);
         }
     }
