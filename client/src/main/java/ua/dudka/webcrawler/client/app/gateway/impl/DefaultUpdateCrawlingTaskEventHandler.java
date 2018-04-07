@@ -1,30 +1,27 @@
 package ua.dudka.webcrawler.client.app.gateway.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-import ua.dudka.webcrawler.client.app.gateway.ExecuteCrawlingTaskEventSender;
 import ua.dudka.webcrawler.client.app.gateway.UpdateCrawlingTaskEventHandler;
-import ua.dudka.webcrawler.client.app.gateway.event.ExecuteCrawlingTaskEvent;
 import ua.dudka.webcrawler.client.app.gateway.event.UpdateCrawlingTaskEvent;
-import ua.dudka.webcrawler.client.repository.CrawlingTaskRepository;
+import ua.dudka.webcrawler.client.domain.service.UpdateCrawlingTaskService;
+
+import static ua.dudka.webcrawler.client.app.config.CrawlingTaskStreams.UPDATE_TASK_INPUT_STREAM;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class DefaultUpdateCrawlingTaskEventHandler implements UpdateCrawlingTaskEventHandler {
-    private final CrawlingTaskRepository repository;
-    private final ExecuteCrawlingTaskEventSender sender;
 
+    private final UpdateCrawlingTaskService service;
+
+    @StreamListener(UPDATE_TASK_INPUT_STREAM)
     @Override
     public Mono<Void> handle(UpdateCrawlingTaskEvent event) {
-        return repository.findById(event.getTaskId())
-                .map(task -> {
-                    task.addVisitedLink(event.getVisitedLink());
-                    return task;
-                })
-                .flatMap(repository::save)
-                .map(t -> new ExecuteCrawlingTaskEvent(event.getTaskId(), event.getVisitedLink()))
-                .doOnSuccess(sender::sendForExecution)
-                .then();
+        log.info("handling {}", event);
+        return service.updateTask(event);
     }
 }
