@@ -1,4 +1,4 @@
-package ua.dudka.webcrawler.executor.gateway.config;
+package ua.dudka.webcrawler.executor.app.config;
 
 import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.cloud.stream.annotation.Output;

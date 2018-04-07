@@ -1,9 +1,9 @@
-package ua.dudka.webcrawler.executor.gateway.handler;
+package ua.dudka.webcrawler.executor.app.gateway.handler;
 
 import org.junit.jupiter.api.Test;
 import ua.dudka.webcrawler.executor.domain.event.ExecuteCrawlingTaskEvent;
 import ua.dudka.webcrawler.executor.domain.service.CrawlingTaskExecutor;
-import ua.dudka.webcrawler.executor.gateway.handler.impl.DefaultExecuteCrawlingTaskEventHandler;
+import ua.dudka.webcrawler.executor.app.gateway.handler.impl.DefaultExecuteCrawlingTaskEventHandler;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;

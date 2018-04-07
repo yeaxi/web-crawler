@@ -6,7 +6,7 @@ import ua.dudka.webcrawler.executor.domain.event.ExecuteCrawlingTaskEvent;
 import ua.dudka.webcrawler.executor.domain.event.UpdateCrawlingTaskEvent;
 import ua.dudka.webcrawler.executor.domain.service.CrawlingTaskExecutor;
 import ua.dudka.webcrawler.executor.domain.service.WebPageParser;
-import ua.dudka.webcrawler.executor.gateway.publisher.UpdateCrawlingTaskEventPublisher;
+import ua.dudka.webcrawler.executor.app.gateway.publisher.UpdateCrawlingTaskEventPublisher;
 
 @Service
 @RequiredArgsConstructor

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import ua.dudka.webcrawler.executor.domain.event.ExecuteCrawlingTaskEvent;
 import ua.dudka.webcrawler.executor.domain.event.UpdateCrawlingTaskEvent;
 import ua.dudka.webcrawler.executor.domain.service.impl.DefaultCrawlingTaskExecutor;
-import ua.dudka.webcrawler.executor.gateway.publisher.UpdateCrawlingTaskEventPublisher;
+import ua.dudka.webcrawler.executor.app.gateway.publisher.UpdateCrawlingTaskEventPublisher;
 
 import java.util.Set;
 
