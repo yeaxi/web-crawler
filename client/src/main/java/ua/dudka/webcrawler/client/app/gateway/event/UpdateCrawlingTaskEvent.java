@@ -1,4 +1,4 @@
-package ua.dudka.webcrawler.client.app.env.event;
+package ua.dudka.webcrawler.client.app.gateway.event;
 
 import lombok.Data;
 

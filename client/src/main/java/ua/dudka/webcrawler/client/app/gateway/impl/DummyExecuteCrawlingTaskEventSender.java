@@ -1,9 +1,9 @@
-package ua.dudka.webcrawler.client.app.env.impl;
+package ua.dudka.webcrawler.client.app.gateway.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ua.dudka.webcrawler.client.app.env.ExecuteCrawlingTaskEventSender;
-import ua.dudka.webcrawler.client.app.env.event.ExecuteCrawlingTaskEvent;
+import ua.dudka.webcrawler.client.app.gateway.ExecuteCrawlingTaskEventSender;
+import ua.dudka.webcrawler.client.app.gateway.event.ExecuteCrawlingTaskEvent;
 
 @Component
 @Slf4j

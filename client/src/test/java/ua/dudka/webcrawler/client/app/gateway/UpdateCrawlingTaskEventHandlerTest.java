@@ -1,12 +1,12 @@
-package ua.dudka.webcrawler.client.app.env;
+package ua.dudka.webcrawler.client.app.gateway;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
-import ua.dudka.webcrawler.client.app.env.event.ExecuteCrawlingTaskEvent;
-import ua.dudka.webcrawler.client.app.env.event.UpdateCrawlingTaskEvent;
-import ua.dudka.webcrawler.client.app.env.impl.DefaultUpdateCrawlingTaskEventHandler;
-import ua.dudka.webcrawler.client.app.env.impl.DummyExecuteCrawlingTaskEventSender;
+import ua.dudka.webcrawler.client.app.gateway.event.ExecuteCrawlingTaskEvent;
+import ua.dudka.webcrawler.client.app.gateway.event.UpdateCrawlingTaskEvent;
+import ua.dudka.webcrawler.client.app.gateway.impl.DefaultUpdateCrawlingTaskEventHandler;
+import ua.dudka.webcrawler.client.app.gateway.impl.DummyExecuteCrawlingTaskEventSender;
 import ua.dudka.webcrawler.client.domain.model.CrawlingTask;
 import ua.dudka.webcrawler.client.repository.CrawlingTaskRepository;
 

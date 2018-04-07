@@ -1,12 +1,12 @@
-package ua.dudka.webcrawler.client.app.env.impl;
+package ua.dudka.webcrawler.client.app.gateway.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-import ua.dudka.webcrawler.client.app.env.ExecuteCrawlingTaskEventSender;
-import ua.dudka.webcrawler.client.app.env.UpdateCrawlingTaskEventHandler;
-import ua.dudka.webcrawler.client.app.env.event.ExecuteCrawlingTaskEvent;
-import ua.dudka.webcrawler.client.app.env.event.UpdateCrawlingTaskEvent;
+import ua.dudka.webcrawler.client.app.gateway.ExecuteCrawlingTaskEventSender;
+import ua.dudka.webcrawler.client.app.gateway.UpdateCrawlingTaskEventHandler;
+import ua.dudka.webcrawler.client.app.gateway.event.ExecuteCrawlingTaskEvent;
+import ua.dudka.webcrawler.client.app.gateway.event.UpdateCrawlingTaskEvent;
 import ua.dudka.webcrawler.client.repository.CrawlingTaskRepository;
 
 @Component

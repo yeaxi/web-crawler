@@ -3,8 +3,8 @@ package ua.dudka.webcrawler.client.domain.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ua.dudka.webcrawler.client.app.env.ExecuteCrawlingTaskEventSender;
-import ua.dudka.webcrawler.client.app.env.event.ExecuteCrawlingTaskEvent;
+import ua.dudka.webcrawler.client.app.gateway.ExecuteCrawlingTaskEventSender;
+import ua.dudka.webcrawler.client.app.gateway.event.ExecuteCrawlingTaskEvent;
 import ua.dudka.webcrawler.client.domain.model.CrawlingTask;
 import ua.dudka.webcrawler.client.domain.service.impl.DefaultCrawlingTaskScheduler;
 
