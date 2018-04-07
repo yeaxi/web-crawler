@@ -1,9 +1,9 @@
-package ua.dudka.webcrawler.executor.env.publisher;
+package ua.dudka.webcrawler.executor.gateway.publisher;
 
 import org.springframework.integration.annotation.Gateway;
 import org.springframework.integration.annotation.MessagingGateway;
 import ua.dudka.webcrawler.executor.domain.event.UpdateCrawlingTaskEvent;
-import ua.dudka.webcrawler.executor.env.config.CrawlingTaskStreams;
+import ua.dudka.webcrawler.executor.gateway.config.CrawlingTaskStreams;
 
 @MessagingGateway
 public interface UpdateCrawlingTaskEventPublisher {

@@ -1,4 +1,4 @@
-package ua.dudka.webcrawler.executor.env.handler;
+package ua.dudka.webcrawler.executor.gateway.handler;
 
 import ua.dudka.webcrawler.executor.domain.event.ExecuteCrawlingTaskEvent;
 
