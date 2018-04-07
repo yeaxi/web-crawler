@@ -1,4 +1,21 @@
 spring:
+  profiles:
+    active: stream
+
+eureka:
+  client:
+    enabled: false
+
+---
+spring:
+  profiles: cloud
+eureka:
+  client:
+    enabled: true
+
+---
+spring:
+  profiles: stream
   cloud:
     stream:
       kafka:
