@@ -9,6 +9,10 @@ eureka:
   client:
     enabled: false
 
+logging:
+  level:
+    root: INFO
+
 ---
 spring:
   profiles: cloud

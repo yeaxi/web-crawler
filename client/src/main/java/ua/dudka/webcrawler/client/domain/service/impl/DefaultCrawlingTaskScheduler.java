@@ -1,6 +1,7 @@
 package ua.dudka.webcrawler.client.domain.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ua.dudka.webcrawler.client.app.gateway.ExecuteCrawlingTaskEventSender;
 import ua.dudka.webcrawler.client.app.gateway.event.ExecuteCrawlingTaskEvent;
@@ -16,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class DefaultCrawlingTaskScheduler implements CrawlingTaskScheduler {
     private final ScheduledExecutorService executorService;
     private final Map<CrawlingTask, ScheduledFuture> tasks;
@@ -36,6 +38,7 @@ public class DefaultCrawlingTaskScheduler implements CrawlingTaskScheduler {
 
     @Override
     public void cancelScheduling(CrawlingTask task) {
+        log.info("cancel scheduling for {}", task);
         tasks.get(task).cancel(false);
         tasks.remove(task);
     }
