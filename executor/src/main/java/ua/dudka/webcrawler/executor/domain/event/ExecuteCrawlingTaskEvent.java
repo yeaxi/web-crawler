@@ -8,11 +8,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ExecuteCrawlingTaskEvent {
 
-    private final String id;
+    private final String taskId;
     private final String link;
 
     ExecuteCrawlingTaskEvent() {
-        this.id = "";
+        this.taskId = "";
         this.link = "";
     }
 }
