@@ -20,8 +20,8 @@ public class DefaultUpdateCrawlingTaskEventHandler implements UpdateCrawlingTask
 
     @StreamListener(UPDATE_TASK_INPUT_STREAM)
     @Override
-    public Mono<Void> handle(UpdateCrawlingTaskEvent event) {
+    public void handle(UpdateCrawlingTaskEvent event) {
         log.info("handling {}", event);
-        return service.updateTask(event);
+        service.updateTask(event);
     }
 }

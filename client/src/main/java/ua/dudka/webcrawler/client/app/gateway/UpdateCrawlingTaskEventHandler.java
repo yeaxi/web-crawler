@@ -5,5 +5,5 @@ import ua.dudka.webcrawler.client.app.gateway.event.UpdateCrawlingTaskEvent;
 
 public interface UpdateCrawlingTaskEventHandler {
 
-    Mono<Void> handle(UpdateCrawlingTaskEvent event);
+    void handle(UpdateCrawlingTaskEvent event);
 }

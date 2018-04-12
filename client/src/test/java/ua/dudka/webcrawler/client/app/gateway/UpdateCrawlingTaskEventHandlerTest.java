@@ -26,7 +26,7 @@ class UpdateCrawlingTaskEventHandlerTest {
     @Test
     void handleEventShouldCallService() {
         UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent("id", "link");
-        handler.handle(event).block();
+        handler.handle(event);
 
         verify(service).updateTask(eq(event));
     }
