@@ -1,5 +1,5 @@
 server:
-  port: 8001
+  port: 8002
 
 spring:
   profiles:
@@ -8,6 +8,10 @@ spring:
 eureka:
   client:
     enabled: false
+
+logging:
+  level:
+    root: INFO
 
 ---
 spring:
@@ -28,7 +32,7 @@ spring:
         execute_task_stream:
           destination: execute_task_stream
           contentType: application/json
-          group: executors_group
         update_task_stream:
           destination: update_task_stream
           contentType: application/json
+          group: client_group
