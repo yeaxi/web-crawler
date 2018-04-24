@@ -1,5 +1,6 @@
 package ua.dudka.webcrawler.client.domain.service;
 
+import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
@@ -9,6 +10,7 @@ import ua.dudka.webcrawler.client.app.gateway.event.UpdateCrawlingTaskEvent;
 import ua.dudka.webcrawler.client.app.gateway.impl.DummyExecuteCrawlingTaskEventSender;
 import ua.dudka.webcrawler.client.domain.model.CrawlingTask;
 import ua.dudka.webcrawler.client.domain.service.impl.DefaultUpdateCrawlingTaskService;
+import ua.dudka.webcrawler.client.exception.ReachedMaxVisitedLinksException;
 import ua.dudka.webcrawler.client.repository.CrawlingTaskRepository;
 
 import java.time.LocalDateTime;
@@ -17,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
 
 class UpdateCrawlingTaskServiceTest {
     private static final String VISITED_LINK = "com.com";
@@ -28,6 +29,9 @@ class UpdateCrawlingTaskServiceTest {
     private UpdateCrawlingTaskService service = new DefaultUpdateCrawlingTaskService(repository, sender);
 
     private CrawlingTask crawlingTask = new CrawlingTask("", 1, LocalDateTime.now());
+
+    @Rule
+    public ReachedMaxVisitedLinksException exception;
 
 
     @BeforeEach
@@ -68,7 +72,7 @@ class UpdateCrawlingTaskServiceTest {
         UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent("1", VISITED_LINK);
 
 
-        service.updateTask(event);
+        service.updateTask(event).block();
 
         verify(repository, never()).save(any(CrawlingTask.class));
     }
@@ -81,7 +85,7 @@ class UpdateCrawlingTaskServiceTest {
         UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent("1", VISITED_LINK);
 
 
-        service.updateTask(event);
+        service.updateTask(event).block();
 
         verify(sender, never()).sendForExecution(any(ExecuteCrawlingTaskEvent.class));
 
@@ -96,7 +100,7 @@ class UpdateCrawlingTaskServiceTest {
         UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent("1", VISITED_LINK);
 
 
-        service.updateTask(event);
+        service.updateTask(event).block();
 
         assertThat(task.getVisitedLinks()).containsOnly("link");
     }
