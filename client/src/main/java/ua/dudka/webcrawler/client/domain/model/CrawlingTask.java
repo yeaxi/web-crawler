@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import ua.dudka.webcrawler.client.exception.ReachedMaxVisitedLinksException;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -48,6 +49,8 @@ public class CrawlingTask {
     public void addVisitedLink(String link) {
         if (visitedLinks.size() < maxVisitedLinks) {
             visitedLinks.add(link);
+        } else {
+            throw new ReachedMaxVisitedLinksException(id, link);
         }
     }
 }
