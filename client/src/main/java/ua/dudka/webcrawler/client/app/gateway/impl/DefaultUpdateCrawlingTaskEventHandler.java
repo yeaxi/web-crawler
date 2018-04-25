@@ -22,6 +22,6 @@ public class DefaultUpdateCrawlingTaskEventHandler implements UpdateCrawlingTask
     @Override
     public void handle(UpdateCrawlingTaskEvent event) {
         log.info("handling {}", event);
-        service.updateTask(event);
+        service.updateTask(event).subscribe();
     }
 }
