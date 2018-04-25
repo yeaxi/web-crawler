@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 
 class UpdateCrawlingTaskServiceTest {
     private static final String VISITED_LINK = "com.com";
-    private static final String EXISTENT_ID = "2";
+    private static final String EXISTENT_ID = "43534534234";
 
     private CrawlingTaskRepository repository = mock(CrawlingTaskRepository.class);
     private ExecuteCrawlingTaskEventSender sender = spy(DummyExecuteCrawlingTaskEventSender.class);
@@ -43,7 +43,7 @@ class UpdateCrawlingTaskServiceTest {
     @Test
     void handleEventWithExistentIdShouldSaveUpdatedTask() {
         UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent(EXISTENT_ID, VISITED_LINK);
-        service.updateTask(event).block();
+        service.updateTask(event).subscribe();
 
         verify(repository).save(crawlingTask);
     }
@@ -51,7 +51,7 @@ class UpdateCrawlingTaskServiceTest {
     @Test
     void handleEventWithExistentIdShouldSendForExecutionUpdatedTask() {
         UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent(EXISTENT_ID, VISITED_LINK);
-        service.updateTask(event).block();
+        service.updateTask(event).subscribe();
 
         verify(sender).sendForExecution(eq(new ExecuteCrawlingTaskEvent(event.getTaskId(), event.getVisitedLink())));
     }
@@ -59,7 +59,7 @@ class UpdateCrawlingTaskServiceTest {
     @Test
     void handleEventWithExistentIdShouldUpdateCrawlingTask() {
         UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent(EXISTENT_ID, VISITED_LINK);
-        service.updateTask(event).block();
+        service.updateTask(event).subscribe();
 
         assertThat(crawlingTask.getVisitedLinks()).containsOnly(VISITED_LINK);
     }
@@ -72,7 +72,7 @@ class UpdateCrawlingTaskServiceTest {
         UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent("1", VISITED_LINK);
 
 
-        service.updateTask(event).block();
+        service.updateTask(event).subscribe();
 
         verify(repository, never()).save(any(CrawlingTask.class));
     }
@@ -85,7 +85,7 @@ class UpdateCrawlingTaskServiceTest {
         UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent("1", VISITED_LINK);
 
 
-        service.updateTask(event).block();
+        service.updateTask(event).subscribe();
 
         verify(sender, never()).sendForExecution(any(ExecuteCrawlingTaskEvent.class));
 
@@ -100,8 +100,29 @@ class UpdateCrawlingTaskServiceTest {
         UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent("1", VISITED_LINK);
 
 
-        service.updateTask(event).block();
+        service.updateTask(event).subscribe();
 
         assertThat(task.getVisitedLinks()).containsOnly("link");
+    }
+
+    @Test
+    void updateNonexistentTaskShouldNotCallRepository() {
+        when(repository.findById("1")).thenReturn(Mono.empty());
+        UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent("1", VISITED_LINK);
+
+        service.updateTask(event).subscribe();
+
+        verify(repository, never()).save(any());
+    }
+
+    @Test
+    void updateNonexistentTaskShouldNotSendNewTaskForExecution() {
+        when(repository.findById("1")).thenReturn(Mono.empty());
+        UpdateCrawlingTaskEvent event = new UpdateCrawlingTaskEvent("1", VISITED_LINK);
+
+        service.updateTask(event).subscribe();
+
+        verify(sender, never()).sendForExecution(any(ExecuteCrawlingTaskEvent.class));
+
     }
 }
