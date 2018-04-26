@@ -9,6 +9,7 @@
     <modules>
         <module>client</module>
         <module>executor</module>
+        <module>domain_common</module>
         <module>env</module>
     </modules>
     <packaging>pom</packaging>
