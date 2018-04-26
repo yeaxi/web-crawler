@@ -18,6 +18,11 @@
             <artifactId>jsoup</artifactId>
             <version>LATEST</version>
         </dependency>
+        <dependency>
+            <groupId>ua.dudka</groupId>
+            <artifactId>domain_common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>
