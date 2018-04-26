@@ -33,7 +33,7 @@ class CrawlingTaskSchedulerTest {
     private ScheduledFuture<?> mockFuture = mock(ScheduledFuture.class);
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         when(mockExecutor.schedule(any(Runnable.class), anyLong(), any(TimeUnit.class))).thenAnswer(invocation -> {
             Thread.sleep(invocation.getArgument(1));
             ((Runnable) invocation.getArgument(0)).run();
@@ -47,7 +47,7 @@ class CrawlingTaskSchedulerTest {
     }
 
     @Test
-    void scheduleExecutionShouldSendTaskForExecution() throws Exception {
+    void scheduleExecutionShouldSendTaskForExecution(){
         CrawlingTask task = new CrawlingTask();
 
         scheduler.scheduleExecution(task);

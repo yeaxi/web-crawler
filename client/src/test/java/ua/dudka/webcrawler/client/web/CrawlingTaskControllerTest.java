@@ -1,6 +1,6 @@
 package ua.dudka.webcrawler.client.web;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 import static ua.dudka.webcrawler.client.web.CrawlingTaskController.Links.TASKS_PATH;
 import static ua.dudka.webcrawler.client.web.CrawlingTaskController.Links.TASK_PATH;
 
-public class CrawlingTaskControllerTest {
+class CrawlingTaskControllerTest {
 
     private CrawlingTaskService crawlingTaskService = mock(CrawlingTaskService.class);
 
@@ -26,8 +26,8 @@ public class CrawlingTaskControllerTest {
             .build();
 
     @Test
-    public void getAllTasksShouldReturnTasksFromService() {
-        CrawlingTask task = new CrawlingTask("https://google.com",1, LocalDateTime.now());
+    void getAllTasksShouldReturnTasksFromService() {
+        CrawlingTask task = new CrawlingTask("https://google.com", 1, LocalDateTime.now());
         when(crawlingTaskService.findAll()).thenReturn(Flux.just(task));
 
         webClient.get()
@@ -40,7 +40,7 @@ public class CrawlingTaskControllerTest {
     }
 
     @Test
-    public void addTaskShouldAddItToService() {
+     void addTaskShouldAddItToService() {
         CreateCrawlingTaskRequest request = new CreateCrawlingTaskRequest("google.com", LocalDateTime.now(), 100);
 
         webClient.post()
@@ -56,7 +56,7 @@ public class CrawlingTaskControllerTest {
     }
 
     @Test
-    public void removeExistentTaskShouldReturnOk() {
+     void removeExistentTaskShouldReturnOk() {
         String existentTaskId = "P2f45";
         when(crawlingTaskService.removeTask(eq(existentTaskId))).thenReturn(Mono.empty());
 
@@ -70,7 +70,7 @@ public class CrawlingTaskControllerTest {
     }
 
     @Test
-    public void removeNonexistentTaskShouldReturn404k() {
+     void removeNonexistentTaskShouldReturn404k() {
         String nonexistentTaskId = "40sdg";
         doThrow(new TaskNotFoundException(nonexistentTaskId))
                 .when(crawlingTaskService).removeTask(eq(nonexistentTaskId));

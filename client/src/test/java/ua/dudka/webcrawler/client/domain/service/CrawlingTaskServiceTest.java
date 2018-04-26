@@ -1,7 +1,7 @@
 package ua.dudka.webcrawler.client.domain.service;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 import ua.dudka.webcrawler.client.domain.model.CrawlingTask;
 import ua.dudka.webcrawler.client.domain.model.ExecutionStatus;
@@ -13,23 +13,24 @@ import ua.dudka.webcrawler.client.web.dto.CreateCrawlingTaskRequest;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class CrawlingTaskServiceTest {
+class CrawlingTaskServiceTest {
 
     private CrawlingTaskScheduler scheduler = mock(CrawlingTaskScheduler.class);
     private CrawlingTaskRepository repository = mock(CrawlingTaskRepository.class);
     private CrawlingTaskService service = new DefaultCrawlingTaskService(repository, scheduler);
 
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         when(repository.save(any(CrawlingTask.class))).then(invocation -> Mono.just(invocation.getArgument(0)));
     }
 
     @Test
-    public void addTaskShouldCreateCrawlingTaskFromRequest() {
+    void addTaskShouldCreateCrawlingTaskFromRequest() {
         CreateCrawlingTaskRequest request = new CreateCrawlingTaskRequest("testPage", LocalDateTime.now(), 1);
 
         CrawlingTask task = service.addTask(request).block();
@@ -42,7 +43,7 @@ public class CrawlingTaskServiceTest {
     }
 
     @Test
-    public void addTaskShouldSaveItAndSendToScheduler() {
+    void addTaskShouldSaveItAndSendToScheduler() {
         CreateCrawlingTaskRequest request = new CreateCrawlingTaskRequest("testPage", LocalDateTime.now(), 1);
 
         service.addTask(request).block();
@@ -52,13 +53,13 @@ public class CrawlingTaskServiceTest {
     }
 
     @Test
-    public void findAllShouldCallRepository() {
+    void findAllShouldCallRepository() {
         service.findAll();
         verify(repository, only()).findAll();
     }
 
     @Test
-    public void removeExistentTaskShouldDeleteItFromRepo() {
+    void removeExistentTaskShouldDeleteItFromRepo() {
         CrawlingTask task = new CrawlingTask();
         when(repository.findById(task.getId())).thenReturn(Mono.just(task));
 
@@ -68,16 +69,16 @@ public class CrawlingTaskServiceTest {
         verify(repository).delete(task);
     }
 
-    @Test(expected = TaskNotFoundException.class)
-    public void removeNonexistentTaskShouldThrowNotFoundException() {
+    @Test
+    void removeNonexistentTaskShouldThrowNotFoundException() {
         String id = "nonexistent id";
         when(repository.findById(id)).thenReturn(Mono.empty());
 
-        service.removeTask(id).block();
+        assertThrows(TaskNotFoundException.class, () -> service.removeTask(id).block());
     }
 
     @Test
-    public void removeIdleTaskShouldCancelScheduling() {
+    void removeIdleTaskShouldCancelScheduling() {
         CrawlingTask task = new CrawlingTask();
         when(repository.findById(task.getId())).thenReturn(Mono.just(task));
 
@@ -87,7 +88,7 @@ public class CrawlingTaskServiceTest {
     }
 
     @Test
-    public void removeRunningTaskShouldNOTCancelScheduling() {
+    void removeRunningTaskShouldNOTCancelScheduling() {
         CrawlingTask task = new CrawlingTask("testPage", 1, LocalDateTime.now(), ExecutionStatus.RUNNING);
         when(repository.findById(task.getId())).thenReturn(Mono.just(task));
 
@@ -98,7 +99,7 @@ public class CrawlingTaskServiceTest {
     }
 
     @Test
-    public void removeCompletedTaskShouldNOTCancelScheduling() {
+    void removeCompletedTaskShouldNOTCancelScheduling() {
         CrawlingTask task = new CrawlingTask("testPage", 1, LocalDateTime.now(), ExecutionStatus.COMPLETED);
         when(repository.findById(task.getId())).thenReturn(Mono.just(task));
 
@@ -109,7 +110,7 @@ public class CrawlingTaskServiceTest {
     }
 
     @Test
-    public void removeFailedTaskShouldNOTCancelScheduling() {
+    void removeFailedTaskShouldNOTCancelScheduling() {
         CrawlingTask task = new CrawlingTask("testPage", 1, LocalDateTime.now(), ExecutionStatus.ERROR);
         when(repository.findById(task.getId())).thenReturn(Mono.just(task));
 

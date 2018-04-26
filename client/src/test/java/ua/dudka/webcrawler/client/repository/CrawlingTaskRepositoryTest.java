@@ -1,10 +1,10 @@
 package ua.dudka.webcrawler.client.repository;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ua.dudka.webcrawler.client.domain.model.CrawlingTask;
 
 import java.time.temporal.ChronoUnit;
@@ -13,16 +13,16 @@ import java.util.List;
 import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataMongoTest
-public class CrawlingTaskRepositoryTest {
+class CrawlingTaskRepositoryTest {
 
     @Autowired
     private CrawlingTaskRepository repository;
 
 
     @Test
-    public void saveAndDeleteTaskById() {
+    void saveAndDeleteTaskById() {
         CrawlingTask task = new CrawlingTask();
         repository.save(task).block();
 
@@ -34,7 +34,7 @@ public class CrawlingTaskRepositoryTest {
     }
 
     @Test
-    public void findAllShouldReturnCreatedTasks() {
+    void findAllShouldReturnCreatedTasks() {
         List<CrawlingTask> tasks = List.of(
                 new CrawlingTask("ss", 1, now().truncatedTo(ChronoUnit.SECONDS)),
                 new CrawlingTask("ss", 1, now().truncatedTo(ChronoUnit.SECONDS)),
